@@ -44,11 +44,11 @@ helm uninstall dataflow-operator -n dataflow
 
 | Chart | Description |
 |-------|-------------|
-| [dataflow-operator](dataflow-operator/) | DataFlow operator and optional web GUI |
+| [dataflow-operator](charts/dataflow-operator/) | DataFlow operator and optional web GUI |
 
 ## dataflow-operator configuration
 
-Key parameters (see [values.yaml](dataflow-operator/values.yaml)):
+Key parameters (see [values.yaml](charts/dataflow-operator/values.yaml)):
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
@@ -82,6 +82,7 @@ gui:
 ```bash
 helm install dataflow-operator dataflow-operator/dataflow-operator -f custom-values.yaml
 ```
+```
 
 ### Example: webhook with cert-manager
 
@@ -97,10 +98,6 @@ webhook:
 
 - Kubernetes 1.21+
 - Helm 3+
-
-## Publishing charts (for maintainers)
-
-Releases and the chart index are built by [GitHub Actions](.github/workflows/release.yaml) using Helm [chart-releaser-action](https://github.com/helm/chart-releaser-action).
 
 ## License and links
 
