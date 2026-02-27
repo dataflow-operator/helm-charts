@@ -102,14 +102,6 @@ webhook:
 
 Releases and the chart index are built by [GitHub Actions](.github/workflows/release.yaml) using Helm [chart-releaser-action](https://github.com/helm/chart-releaser-action).
 
-**Before the first run:**
-
-1. Create a `gh-pages` branch (empty or with a single commit).
-2. In the repo: **Settings → Pages → Source** — set branch to `gh-pages` and root.
-3. On each push to `main` (or push of tag `dataflow-operator-*`), the workflow will package the chart, create a GitHub Release, and update `index.yaml` on `gh-pages`.
-
-Charts are available at **https://dataflow-operator.github.io/helm-charts**.
-
 ## License and links
 
 - [Helm charts repo](https://github.com/dataflow-operator/helm-charts) — this repository
