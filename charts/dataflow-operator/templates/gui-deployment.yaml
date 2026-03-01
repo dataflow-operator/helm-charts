@@ -55,9 +55,11 @@ spec:
         {{- if .Values.gui.logLevel }}
         - --log-level={{ .Values.gui.logLevel }}
         {{- end }}
-        {{- with .Values.gui.extraEnv }}
         env:
-          {{- toYaml . | nindent 10 }}
+        - name: OPERATOR_METRICS_URL
+          value: "http://{{ include "dataflow-operator.fullname" . }}:{{ .Values.service.port }}/metrics"
+        {{- with .Values.gui.extraEnv }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         ports:
         - name: http
