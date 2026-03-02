@@ -63,25 +63,16 @@ Key parameters (see [values.yaml](charts/dataflow-operator/values.yaml)):
 | `gui.enabled` | Enable web GUI for Dataflows and logs | `false` |
 | `serviceMonitor.enabled` | Create ServiceMonitor for Prometheus Operator | `false` |
 
+See [Web GUI documentation](../docs/docs/en/gui.md) for GUI capabilities, configuration, and deployment.
+
 ### Example: install with GUI and Ingress
 
-```yaml
-# custom-values.yaml
-gui:
-  enabled: true
-  ingress:
-    enabled: true
-    className: nginx
-    hosts:
-      - host: dataflow.example.com
-        paths:
-          - path: /
-            pathType: Prefix
-```
-
 ```bash
-helm install dataflow-operator dataflow-operator/dataflow-operator -f custom-values.yaml
-```
+helm install dataflow-operator dataflow-operator/dataflow-operator \
+  --set gui.enabled=true \
+  --set gui.ingress.enabled=true \
+  --set gui.ingress.className=nginx \
+  --set gui.ingress.hosts[0].host=dataflow.example.com
 ```
 
 ### Example: webhook with cert-manager

@@ -60,6 +60,15 @@ rules:
   - get
   - list
   - watch
+# Operator scrapes processor pods for metrics aggregation
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
 # Operator создаёт и владеет Deployments и ConfigMaps для процессоров DataFlow
 - apiGroups:
   - apps
@@ -94,15 +103,7 @@ rules:
   verbs:
   - list
   - get
-# GUI: read-only доступ к подам и логам
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
+# GUI: доступ к логам подов (pods get/list/watch уже есть для metrics aggregation)
 - apiGroups:
   - ""
   resources:
