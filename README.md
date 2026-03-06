@@ -58,7 +58,7 @@ Key parameters (see [values.yaml](charts/dataflow-operator/values.yaml)):
 | `metrics.enabled` | Enable Prometheus metrics | `true` |
 | `metrics.port` | Metrics port | `9090` |
 | `logLevel` | Operator log level (`debug`, `info`, `warn`, `error`) | `info` |
-| `rbac.create` | Create RBAC (ServiceAccount, ClusterRole, ClusterRoleBinding) | `true` |
+| `rbac.create` | Create RBAC (ServiceAccount, ClusterRole, ClusterRoleBinding). ClusterRole includes permissions for checkpoint persistence (ServiceAccount, Role, RoleBinding per DataFlow when `spec.checkpointPersistence: true`). | `true` |
 | `webhook.enabled` | Enable Validating Webhook for DataFlow CR | `false` |
 | `gui.enabled` | Enable web GUI for Dataflows and logs | `false` |
 | `serviceMonitor.enabled` | Create ServiceMonitor for Prometheus Operator | `false` |

@@ -94,6 +94,43 @@ rules:
   - update
   - patch
   - delete
+# Checkpoint persistence: operator creates ServiceAccount, Role, RoleBinding per DataFlow when spec.checkpointPersistence is true
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - roles
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - rolebindings
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
 {{- if .Values.gui.enabled }}
 # GUI: список namespaces для выбора в UI
 - apiGroups:

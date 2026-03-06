@@ -92,13 +92,15 @@ service:
   port: 9090
 
 # ServiceMonitor configuration for Prometheus
+# Prometheus Operator выбирает ServiceMonitor по labels. Добавьте release/name вашего Prometheus.
 serviceMonitor:
   enabled: false
   interval: 30s
   scrapeTimeout: 10s
+  # Labels для serviceMonitorSelector Prometheus. Раскомментируйте и укажите ваш release:
   additionalLabels: {}
-    # prometheus: kube-prometheus
-    # release: prometheus
+  #   release: kube-prometheus-stack   # для kube-prometheus-stack
+  #   release: prometheus              # для prometheus-operator
 
 # GUI server configuration (web UI for viewing Dataflows and processor logs).
 # Image is built separately from the dataflow-web folder; override gui.image to use another image.
