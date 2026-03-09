@@ -102,6 +102,21 @@ serviceMonitor:
   #   release: kube-prometheus-stack   # для kube-prometheus-stack
   #   release: prometheus              # для prometheus-operator
 
+# Monitoring: Grafana dashboard (ConfigMap) и PrometheusRule (алерты)
+monitoring:
+  # Grafana dashboard — устанавливается через ConfigMap. Grafana sidecar (kube-prometheus-stack) подхватывает ConfigMap с label grafana_dashboard: "1"
+  dashboard:
+    enabled: false
+    # Папка в Grafana (annotation grafana_folder)
+    folder: "DataFlow"
+  # PrometheusRule — алерты для Prometheus Operator. Labels должны совпадать с ruleSelector вашего Prometheus.
+  prometheusRule:
+    enabled: false
+    # Labels для ruleSelector Prometheus (release, app и т.д.)
+    additionalLabels: {}
+    #   release: kube-prometheus-stack
+    #   app: dataflow-operator
+
 # GUI server configuration (web UI for viewing Dataflows and processor logs).
 # Image is built separately from the dataflow-web folder; override gui.image to use another image.
 gui:

@@ -19,6 +19,7 @@ rules:
   - patch
   - watch
 # EventRecorder: создание событий для DataFlow (kubectl describe dataflow, UI событий)
+# GUI: list/get для отображения событий в веб-интерфейсе
 - apiGroups:
   - ""
   resources:
@@ -26,6 +27,8 @@ rules:
   verbs:
   - create
   - patch
+  - list
+  - get
 - apiGroups:
   - dataflow.dataflow.io
   resources:

@@ -1,0 +1,16 @@
+{{- if and .Values.monitoring .Values.monitoring.dashboard .Values.monitoring.dashboard.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "dataflow-operator.fullname" . }}-grafana-dashboard
+  labels:
+    {{- include "dataflow-operator.labels" . | nindent 4 }}
+    grafana_dashboard: "1"
+  {{- with .Values.monitoring.dashboard.folder }}
+  annotations:
+    grafana_folder: {{ . | quote }}
+  {{- end }}
+data:
+  grafana-dashboard.json: |
+{{ .Files.Get "dashboards/grafana-dashboard.json" | indent 4 }}
+{{- end }}
