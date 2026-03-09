@@ -30,7 +30,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "sed -i 's/^version: .*/version: ${nextRelease.version}/' charts/dataflow-operator/Chart.yaml && sed -i 's/^appVersion: .*/appVersion: \"${nextRelease.version}\"/' charts/dataflow-operator/Chart.yaml"
+        "prepareCmd": "sed -i 's/^version: .*/version: ${nextRelease.version}/' charts/dataflow-operator/Chart.yaml"
       }
     ],
     [
