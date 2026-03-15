@@ -18,8 +18,8 @@ spec:
           labels:
             severity: critical
           annotations:
-            summary: "DataFlow {{ $labels.namespace }}/{{ $labels.name }} is in Error state"
-            description: "DataFlow {{ $labels.namespace }}/{{ $labels.name }} has been in Error state for more than 2 minutes."
+            summary: {{ printf "DataFlow {{ $labels.namespace }}/{{ $labels.name }} is in Error state" | quote }}
+            description: {{ printf "DataFlow {{ $labels.namespace }}/{{ $labels.name }} has been in Error state for more than 2 minutes." | quote }}
 
         - alert: DataFlowConnectorDisconnected
           expr: dataflow_connector_connection_status == 0
@@ -27,8 +27,8 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "DataFlow connector {{ $labels.namespace }}/{{ $labels.name }} is disconnected"
-            description: "Connector {{ $labels.connector_type }}/{{ $labels.connector_name }} for DataFlow {{ $labels.namespace }}/{{ $labels.name }} has been disconnected for more than 5 minutes."
+            summary: {{ printf "DataFlow connector {{ $labels.namespace }}/{{ $labels.name }} is disconnected" | quote }}
+            description: {{ printf "Connector {{ $labels.connector_type }}/{{ $labels.connector_name }} for DataFlow {{ $labels.namespace }}/{{ $labels.name }} has been disconnected for more than 5 minutes." | quote }}
 
         - alert: DataFlowHighErrorRate
           expr: |
@@ -43,8 +43,8 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "DataFlow {{ $labels.namespace }}/{{ $labels.name }} has high error rate"
-            description: "Error rate (connector + transformer errors) / messages received is above 1% for {{ $labels.namespace }}/{{ $labels.name }}. Current value: {{ $value }}."
+            summary: {{ printf "DataFlow {{ $labels.namespace }}/{{ $labels.name }} has high error rate" | quote }}
+            description: {{ printf "Error rate (connector + transformer errors) / messages received is above 1%% for {{ $labels.namespace }}/{{ $labels.name }}. Current value: {{ $value }}." | quote }}
 
         - alert: DataFlowSlowProcessing
           expr: |
@@ -55,8 +55,8 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "DataFlow {{ $labels.namespace }}/{{ $labels.name }} has slow message processing"
-            description: "p95 message processing duration is above 1 second for {{ $labels.namespace }}/{{ $labels.name }}. Current value: {{ $value }}s."
+            summary: {{ printf "DataFlow {{ $labels.namespace }}/{{ $labels.name }} has slow message processing" | quote }}
+            description: {{ printf "p95 message processing duration is above 1 second for {{ $labels.namespace }}/{{ $labels.name }}. Current value: {{ $value }}s." | quote }}
 
         - alert: DataFlowLowTaskSuccessRate
           expr: dataflow_task_success_rate < 0.95
@@ -64,8 +64,8 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "DataFlow {{ $labels.namespace }}/{{ $labels.name }} has low task success rate"
-            description: "Task success rate is below 95% for {{ $labels.namespace }}/{{ $labels.name }}. Current value: {{ $value }}."
+            summary: {{ printf "DataFlow {{ $labels.namespace }}/{{ $labels.name }} has low task success rate" | quote }}
+            description: {{ printf "Task success rate is below 95%% for {{ $labels.namespace }}/{{ $labels.name }}. Current value: {{ $value }}." | quote }}
 
         - alert: DataFlowHighQueueSize
           expr: dataflow_task_queue_size > 1000
@@ -73,8 +73,8 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "DataFlow {{ $labels.namespace }}/{{ $labels.name }} has high queue size"
-            description: "Queue {{ $labels.queue_type }} for {{ $labels.namespace }}/{{ $labels.name }} exceeds 1000 messages. Current value: {{ $value }}."
+            summary: {{ printf "DataFlow {{ $labels.namespace }}/{{ $labels.name }} has high queue size" | quote }}
+            description: {{ printf "Queue {{ $labels.queue_type }} for {{ $labels.namespace }}/{{ $labels.name }} exceeds 1000 messages. Current value: {{ $value }}." | quote }}
 
         - alert: DataFlowHighE2ELatency
           expr: |
@@ -85,6 +85,6 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: "DataFlow {{ $labels.namespace }}/{{ $labels.name }} has high end-to-end latency"
-            description: "p99 end-to-end latency is above 5 seconds for {{ $labels.namespace }}/{{ $labels.name }}. Current value: {{ $value }}s."
+            summary: {{ printf "DataFlow {{ $labels.namespace }}/{{ $labels.name }} has high end-to-end latency" | quote }}
+            description: {{ printf "p99 end-to-end latency is above 5 seconds for {{ $labels.namespace }}/{{ $labels.name }}. Current value: {{ $value }}s." | quote }}
 {{- end }}
