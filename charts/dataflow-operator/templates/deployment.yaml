@@ -54,6 +54,22 @@ spec:
           value: {{ .Values.logLevel | default "info" | quote }}
         - name: PROCESSOR_LOG_LEVEL
           value: {{ .Values.processorLogLevel | default "info" | quote }}
+        {{- if and .Values.sentry.enabled .Values.sentry.dsn }}
+        - name: SENTRY_DSN
+          value: {{ .Values.sentry.dsn | quote }}
+        - name: SENTRY_ENVIRONMENT
+          value: {{ .Values.sentry.environment | default "production" | quote }}
+        - name: SENTRY_TRACES_SAMPLE_RATE
+          value: {{ (.Values.sentry.tracesSampleRate | default 0.1) | quote }}
+        {{- if .Values.sentry.debug }}
+        - name: SENTRY_DEBUG
+          value: "true"
+        {{- end }}
+        {{- if .Values.sentry.release }}
+        - name: SENTRY_RELEASE
+          value: {{ .Values.sentry.release | quote }}
+        {{- end }}
+        {{- end }}
         {{- if and .Values.webhook.enabled .Values.webhook.certDir }}
         - name: WEBHOOK_CERT_DIR
           value: {{ .Values.webhook.certDir | quote }}

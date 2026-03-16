@@ -58,6 +58,22 @@ spec:
         env:
         - name: OPERATOR_METRICS_URL
           value: "http://{{ include "dataflow-operator.fullname" . }}:{{ .Values.service.port }}/metrics"
+        {{- if and .Values.sentry.enabled .Values.sentry.dsn }}
+        - name: SENTRY_DSN
+          value: {{ .Values.sentry.dsn | quote }}
+        - name: SENTRY_ENVIRONMENT
+          value: {{ .Values.sentry.environment | default "production" | quote }}
+        - name: SENTRY_TRACES_SAMPLE_RATE
+          value: {{ (.Values.sentry.tracesSampleRate | default 0.1) | quote }}
+        {{- if .Values.sentry.debug }}
+        - name: SENTRY_DEBUG
+          value: "true"
+        {{- end }}
+        {{- if .Values.sentry.release }}
+        - name: SENTRY_RELEASE
+          value: {{ .Values.sentry.release | quote }}
+        {{- end }}
+        {{- end }}
         {{- with .Values.gui.extraEnv }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

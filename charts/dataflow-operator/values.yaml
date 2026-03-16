@@ -76,6 +76,20 @@ logLevel: "info"
 # Log level for processor pods (sets env PROCESSOR_LOG_LEVEL in the operator; operator passes it as LOG_LEVEL to each processor pod)
 processorLogLevel: "info"
 
+# Sentry error monitoring and tracing. When enabled, operator and processor pods report errors and traces to Sentry.
+sentry:
+  enabled: false
+  # DSN from Sentry project settings (required when enabled)
+  dsn: ""
+  # Environment name (e.g. production, staging)
+  environment: "production"
+  # Traces sample rate 0.0-1.0 (default 0.1 = 10%)
+  tracesSampleRate: 0.1
+  # Enable Sentry SDK debug output
+  debug: false
+  # Release version (e.g. git commit or chart appVersion)
+  release: ""
+
 # Health probe configuration
 health:
   # The address the probe endpoint binds to
