@@ -3,7 +3,7 @@ name: dataflow-operator
 description: A Helm chart for DataFlow Operator - Kubernetes оператор для потоковой передачи данных
 type: application
 version: 1.0.4
-appVersion: "1.0.7"
+appVersion: "1.0.9"
 keywords:
   - dataflow
   - operator
