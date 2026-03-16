@@ -23,7 +23,7 @@ helm install dataflow-operator dataflow-operator/dataflow-operator -n dataflow
 
 # Install with custom values
 helm install dataflow-operator dataflow-operator/dataflow-operator \
-  --set image.tag=v0.1.1 \
+  --set image.tag=v1.0.7 \
   --set metrics.enabled=true
 ```
 

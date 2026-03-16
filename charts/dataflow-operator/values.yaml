@@ -2,6 +2,14 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# CRD management
+crds:
+  # Install and manage CRD as part of the Helm release (installed on helm install, updated on helm upgrade)
+  install: true
+  # When true, adds "helm.sh/resource-policy: keep" annotation to prevent CRD deletion on helm uninstall.
+  # Recommended: deleting the CRD removes ALL DataFlow resources in the cluster.
+  keep: true
+
 replicaCount: 1
 
 image:
@@ -10,7 +18,7 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
-# Image for processor pods (отдельный под под каждый DataFlow). If not set, uses the same image and tag as the operator.
+# Image for processor pods (отдельный под под каждый DataFlow). If not set, uses ghcr.io/dataflow-operator/dataflow-processor with same tag as operator.
 processorImage: ""
 
 imagePullSecrets: []

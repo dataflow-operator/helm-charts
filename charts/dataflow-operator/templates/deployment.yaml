@@ -45,7 +45,7 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
         - name: PROCESSOR_IMAGE
-          value: {{ .Values.processorImage | default (printf "%s:%s" .Values.image.repository (.Values.image.tag | default .Chart.AppVersion)) | quote }}
+          value: {{ .Values.processorImage | default (printf "ghcr.io/dataflow-operator/dataflow:%s" (.Values.image.tag | default .Chart.AppVersion)) | quote }}
         - name: OPERATOR_DEPLOYMENT_NAME
           value: {{ include "dataflow-operator.fullname" . | quote }}
         - name: OPERATOR_NAMESPACE
