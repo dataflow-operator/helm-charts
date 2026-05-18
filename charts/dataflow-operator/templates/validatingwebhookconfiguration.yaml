@@ -29,4 +29,27 @@ webhooks:
         namespace: {{ .Release.Namespace }}
         path: /validate-dataflow-dataflow-io-v1-dataflow
       caBundle: {{ .Values.webhook.caBundle }}
+  - name: vdataflowcron.dataflow.dataflow.io
+    admissionReviewVersions:
+      - v1
+    sideEffects: None
+    failurePolicy: Fail
+    matchPolicy: Equivalent
+    rules:
+      - operations:
+          - CREATE
+          - UPDATE
+        apiGroups:
+          - dataflow.dataflow.io
+        apiVersions:
+          - v1
+        resources:
+          - dataflowcrons
+        scope: Namespaced
+    clientConfig:
+      service:
+        name: {{ include "dataflow-operator.fullname" . }}
+        namespace: {{ .Release.Namespace }}
+        path: /validate-dataflow-dataflow-io-v1-dataflowcron
+      caBundle: {{ .Values.webhook.caBundle }}
 {{- end }}
