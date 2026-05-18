@@ -1,0 +1,116 @@
+{{- if .Values.crds.install }}
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    {{- if .Values.crds.keep }}
+    "helm.sh/resource-policy": keep
+    {{- end }}
+  labels:
+    {{- include "dataflow-operator.labels" . | nindent 4 }}
+  name: dataflowcrons.dataflow.dataflow.io
+spec:
+  group: dataflow.dataflow.io
+  names:
+    kind: DataFlowCron
+    listKind: DataFlowCronList
+    plural: dataflowcrons
+    singular: dataflowcron
+  scope: Namespaced
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          description: DataFlowCron is the Schema for scheduled DataFlow runs.
+          type: object
+          properties:
+            apiVersion:
+              type: string
+            kind:
+              type: string
+            metadata:
+              type: object
+            spec:
+              type: object
+              properties:
+                schedule:
+                  type: string
+                concurrencyPolicy:
+                  type: string
+                  enum:
+                    - Allow
+                    - Forbid
+                    - Replace
+                successfulJobsHistoryLimit:
+                  type: integer
+                  format: int32
+                failedJobsHistoryLimit:
+                  type: integer
+                  format: int32
+                startingDeadlineSeconds:
+                  type: integer
+                  format: int64
+                suspend:
+                  type: boolean
+                triggers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      image:
+                        type: string
+                      command:
+                        type: array
+                        items:
+                          type: string
+                      args:
+                        type: array
+                        items:
+                          type: string
+                      env:
+                        type: array
+                        x-kubernetes-preserve-unknown-fields: true
+                        items:
+                          type: object
+                    required:
+                      - image
+                source:
+                  x-kubernetes-preserve-unknown-fields: true
+                  type: object
+                sink:
+                  x-kubernetes-preserve-unknown-fields: true
+                  type: object
+              required:
+                - schedule
+                - source
+                - sink
+            status:
+              type: object
+              properties:
+                phase:
+                  type: string
+                message:
+                  type: string
+                currentRunID:
+                  type: string
+                currentTriggerIndex:
+                  type: integer
+                  format: int32
+                activeJobName:
+                  type: string
+                lastScheduleTime:
+                  format: date-time
+                  type: string
+                lastSuccessfulTime:
+                  format: date-time
+                  type: string
+                lastFailedTime:
+                  format: date-time
+                  type: string
+      subresources:
+        status: {}
+{{- end }}

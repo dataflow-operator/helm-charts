@@ -56,6 +56,32 @@ rules:
   - patch
   - update
 - apiGroups:
+  - dataflow.dataflow.io
+  resources:
+  - dataflowcrons
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - dataflow.dataflow.io
+  resources:
+  - dataflowcrons/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - dataflow.dataflow.io
+  resources:
+  - dataflowcrons/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
   - ""
   resources:
   - secrets
@@ -77,6 +103,19 @@ rules:
   - apps
   resources:
   - deployments
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - batch
+  resources:
+  - cronjobs
+  - jobs
   verbs:
   - get
   - list
