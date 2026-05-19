@@ -963,6 +963,15 @@ spec:
                   Default: 100. Recommended for high throughput: 500–1000.
                 format: int32
                 type: integer
+              replicas:
+                default: 1
+                description: |-
+                  Replicas is the number of processor pods (Deployment replicas).
+                  Only supported for Kafka sources (consumer group coordinates partition assignment).
+                  For polling sources (postgresql, clickhouse, trino, nessie) must be 1 or unset.
+                format: int32
+                minimum: 0
+                type: integer
               checkpointPersistence:
                 description: |-
                   CheckpointPersistence enables persisting source checkpoint (lastReadID, lastReadChangeTime) to a ConfigMap.
