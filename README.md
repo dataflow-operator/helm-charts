@@ -62,8 +62,36 @@ Key parameters (see [values.yaml](charts/dataflow-operator/values.yaml)):
 | `webhook.enabled` | Enable Validating Webhook for DataFlow CR | `false` |
 | `gui.enabled` | Enable web GUI for Dataflows and logs | `false` |
 | `serviceMonitor.enabled` | Create ServiceMonitor for Prometheus Operator | `false` |
+| `serviceMonitor.interval` | Scrape interval | `30s` |
+| `serviceMonitor.scrapeTimeout` | Scrape timeout | `10s` |
+| `serviceMonitor.additionalLabels` | Labels for Prometheus `serviceMonitorSelector` (e.g. `release: kube-prometheus-stack`) | `{}` |
+| `monitoring.prometheusRule.enabled` | Create PrometheusRule with DataFlow alerts | `false` |
+| `monitoring.prometheusRule.additionalLabels` | Labels for Prometheus `ruleSelector` (e.g. `release: kube-prometheus-stack`) | `{}` |
+| `monitoring.dashboard.enabled` | Install Grafana dashboard ConfigMap | `false` |
 
 See [Web GUI documentation](../docs/docs/en/gui.md) for GUI capabilities, configuration, and deployment.
+
+### Example: Prometheus metrics, alerts, and Grafana dashboard
+
+Enable scraping and alerting with [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) (adjust `release` label to match your Prometheus selectors):
+
+```bash
+helm upgrade --install dataflow-operator dataflow-operator/dataflow-operator \
+  --set serviceMonitor.enabled=true \
+  --set serviceMonitor.additionalLabels.release=kube-prometheus-stack \
+  --set monitoring.prometheusRule.enabled=true \
+  --set monitoring.prometheusRule.additionalLabels.release=kube-prometheus-stack \
+  --set monitoring.dashboard.enabled=true
+```
+
+Alert rules are defined in [charts/dataflow-operator/templates/_prometheusrule.tpl](charts/dataflow-operator/templates/_prometheusrule.tpl) (9 alerts, including pipeline stall and Kafka fetch timeouts). The standalone manifest [monitoring/alerts/prometheusrule.yaml](../monitoring/alerts/prometheusrule.yaml) must stay in sync — verified by `charts/dataflow-operator/tests/prometheusrule_test.sh`.
+
+Run chart tests:
+
+```bash
+bash charts/dataflow-operator/tests/crd_test.sh
+bash charts/dataflow-operator/tests/prometheusrule_test.sh
+```
 
 ### Example: install with GUI and Ingress
 
