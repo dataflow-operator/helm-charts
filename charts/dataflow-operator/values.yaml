@@ -77,7 +77,8 @@ logLevel: "info"
 processorLogLevel: "info"
 
 # Pipeline progress timeout for processor /livez (seconds). Operator passes PROCESSOR_PROGRESS_TIMEOUT_SECONDS to each processor pod.
-processorProgressTimeoutSeconds: "600"
+# Low-traffic Kafka pipelines need headroom beyond batch interval; sinks and Kafka source heartbeat update progress while idle.
+processorProgressTimeoutSeconds: "3600"
 
 # Sentry error monitoring and tracing. When enabled, operator and processor pods report errors and traces to Sentry.
 sentry:

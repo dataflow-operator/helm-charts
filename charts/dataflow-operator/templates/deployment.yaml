@@ -55,7 +55,7 @@ spec:
         - name: PROCESSOR_LOG_LEVEL
           value: {{ .Values.processorLogLevel | default "info" | quote }}
         - name: PROCESSOR_PROGRESS_TIMEOUT_SECONDS
-          value: {{ .Values.processorProgressTimeoutSeconds | default "600" | quote }}
+          value: {{ .Values.processorProgressTimeoutSeconds | default "3600" | quote }}
         {{- if and .Values.sentry.enabled .Values.sentry.dsn }}
         - name: SENTRY_DSN
           value: {{ .Values.sentry.dsn | quote }}
