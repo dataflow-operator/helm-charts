@@ -2,6 +2,27 @@ apiVersion: v1
 entries:
   dataflow-operator:
   - apiVersion: v2
+    appVersion: 1.0.31
+    created: "2026-06-02T12:46:01.787257261Z"
+    description: A Helm chart for DataFlow Operator - Kubernetes оператор для потоковой
+      передачи данных
+    digest: a6fcd00b89d918987ab1728fe10636604bc4d7019286f306e39928aad586e55b
+    home: https://github.com/dataflow-operator/dataflow
+    keywords:
+    - dataflow
+    - operator
+    - kubernetes
+    - streaming
+    maintainers:
+    - name: ilyario (Ilya Ponomarev)
+    name: dataflow-operator
+    sources:
+    - https://github.com/dataflow-operator/dataflow
+    type: application
+    urls:
+    - https://github.com/dataflow-operator/helm-charts/releases/download/dataflow-operator-1.0.15/dataflow-operator-1.0.15.tgz
+    version: 1.0.15
+  - apiVersion: v2
     appVersion: 1.0.29
     created: "2026-06-02T09:27:36.277579765Z"
     description: A Helm chart for DataFlow Operator - Kubernetes оператор для потоковой
@@ -295,4 +316,4 @@ entries:
     urls:
     - https://github.com/dataflow-operator/helm-charts/releases/download/dataflow-operator-0.1.4/dataflow-operator-0.1.4.tgz
     version: 0.1.4
-generated: "2026-06-02T09:27:36.277671408Z"
+generated: "2026-06-02T12:46:01.787348213Z"
