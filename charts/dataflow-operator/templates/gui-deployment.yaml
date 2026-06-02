@@ -58,6 +58,17 @@ spec:
         env:
         - name: OPERATOR_METRICS_URL
           value: "http://{{ include "dataflow-operator.fullname" . }}:{{ .Values.service.port }}/metrics"
+        {{- if and .Values.gui.prometheus .Values.gui.prometheus.url }}
+        - name: PROMETHEUS_URL
+          value: {{ .Values.gui.prometheus.url | quote }}
+        {{- end }}
+        {{- if and .Values.gui.prometheus .Values.gui.prometheus.bearerTokenSecret .Values.gui.prometheus.bearerTokenSecret.name }}
+        - name: PROMETHEUS_BEARER_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.gui.prometheus.bearerTokenSecret.name | quote }}
+              key: {{ .Values.gui.prometheus.bearerTokenSecret.key | default "token" | quote }}
+        {{- end }}
         {{- if and .Values.sentry.enabled .Values.sentry.dsn }}
         - name: SENTRY_DSN
           value: {{ .Values.sentry.dsn | quote }}
