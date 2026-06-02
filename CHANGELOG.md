@@ -1,3 +1,5 @@
+## [1.0.13](https://github.com/dataflow-operator/helm-charts/compare/v1.0.12...v1.0.13) (2026-06-02)
+
 ## [1.0.12](https://github.com/dataflow-operator/helm-charts/compare/v1.0.11...v1.0.12) (2026-05-27)
 
 ## [1.0.11](https://github.com/dataflow-operator/helm-charts/compare/v1.0.10...v1.0.11) (2026-05-19)
