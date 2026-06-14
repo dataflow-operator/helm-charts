@@ -44,6 +44,16 @@ spec:
           spec:
             description: DataFlowSpec defines the desired state of DataFlow
             properties:
+              ackGranularity:
+                default: batch
+                description: |-
+                  AckGranularity controls when source offsets are committed relative to sink writes.
+                  "batch" (default): commit after each sink batch flush.
+                  "message": commit after each message is successfully written (reduces re-read window for Kafka→batch sink).
+                enum:
+                - batch
+                - message
+                type: string
               affinity:
                 description: Affinity is a group of affinity scheduling rules
                 properties:
@@ -963,25 +973,45 @@ spec:
                   Default: 100. Recommended for high throughput: 500–1000.
                 format: int32
                 type: integer
-              replicas:
-                default: 1
-                description: |-
-                  Replicas is the number of processor pods (Deployment replicas).
-                  Only supported for Kafka sources (consumer group coordinates partition assignment).
-                  For polling sources (postgresql, clickhouse, trino, nessie) must be 1 or unset.
-                format: int32
-                minimum: 0
-                type: integer
               checkpointPersistence:
                 description: |-
-                  CheckpointPersistence enables persisting source checkpoint (lastReadID, lastReadChangeTime) to a ConfigMap.
+                  CheckpointPersistence enables persisting source checkpoint (lastReadChangeTime, lastReadOrderByValue) to a ConfigMap.
                   When enabled, polling sources (PostgreSQL, ClickHouse, Trino) resume from the last committed position after restart, reducing duplicates.
                   Default: true. Set to false to disable.
+                type: boolean
+              checkpointReset:
+                description: |-
+                  CheckpointReset clears persisted source checkpoint on the next processor start (one-shot).
+                  Alternatively set annotation dataflow.dataflow.io/reset-checkpoint: "true" on the DataFlow.
+                type: boolean
+              checkpointSaveInterval:
+                description: |-
+                  CheckpointSaveInterval controls how often pending checkpoints are flushed to the ConfigMap.
+                  Also used as the minimum coalesce interval when checkpointSyncOnAck is true.
+                  Default: 30s.
+                type: string
+              checkpointSyncOnAck:
+                description: |-
+                  CheckpointSyncOnAck persists checkpoint to the ConfigMap immediately after each sink batch ack.
+                  Shrinks the duplicate window on pod crash from the debounce interval to roughly one batch.
+                  Default: false (debounced save only). Recommended for migration and cron workloads.
                 type: boolean
               errors:
                 description: Errors defines the error sink for messages that failed
                   to be written to the main sink
                 properties:
+                  ackPolicy:
+                    default: afterWrite
+                    description: |-
+                      AckPolicy controls when source offsets/checkpoints are committed for messages routed to the error sink.
+                      afterWrite (default): ack after error sink write.
+                      never: do not ack failed messages (they may be re-read on restart).
+                      afterMainSinkSuccess: ack only after main sink success (failed messages are not acked).
+                    enum:
+                    - afterWrite
+                    - never
+                    - afterMainSinkSuccess
+                    type: string
                   config:
                     description: Config holds connector configuration. Structure depends
                       on type.
@@ -1032,6 +1062,15 @@ spec:
                   ProcessorVersion is the image tag for the processor when using the default image repository (same as controller).
                   Ignored if ProcessorImage is set. Example: "v1.2.3".
                 type: string
+              replicas:
+                default: 1
+                description: |-
+                  Replicas is the number of processor pods (Deployment replicas).
+                  Only supported for Kafka sources (consumer group coordinates partition assignment).
+                  For polling sources (postgresql, clickhouse, trino, nessie) must be 1 or unset.
+                format: int32
+                minimum: 0
+                type: integer
               resources:
                 description: Resources defines the resource requirements for the processor
                   pod
@@ -1125,6 +1164,11 @@ spec:
                 - type
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
+              strictIdempotency:
+                description: |-
+                  StrictIdempotency rejects polling sources paired with non-idempotent main sinks at admission.
+                  When false (default), a warning is emitted instead.
+                type: boolean
               tolerations:
                 description: Tolerations are attached to tolerate any taint that matches
                   the triple <key,value,effect>
@@ -1180,7 +1224,7 @@ spec:
                       x-kubernetes-preserve-unknown-fields: true
                     type:
                       description: 'Type of transformation: timestamp, flatten, filter,
-                        mask, router, select, remove, snakeCase, camelCase'
+                        mask, router, select, remove, snakeCase, camelCase, debeziumUnwrap'
                       type: string
                   required:
                   - type
@@ -1194,6 +1238,67 @@ spec:
           status:
             description: DataFlowStatus defines the observed state of DataFlow
             properties:
+              conditions:
+                description: Conditions represent the latest available observations
+                  of the DataFlow state.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
               errorCount:
                 description: ErrorCount is the number of errors encountered
                 format: int64
