@@ -1,3 +1,7 @@
+## Commits
+
+- a91c6e6 chore: update release notes generator path in .releaserc.json
+
 ## [1.0.17](https://github.com/dataflow-operator/helm-charts/compare/v1.0.16...v1.0.17) (2026-06-14)
 
 ## [1.0.16](https://github.com/dataflow-operator/helm-charts/compare/v1.0.15...v1.0.16) (2026-06-08)
