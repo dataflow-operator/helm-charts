@@ -1,3 +1,5 @@
+No user-facing commits in this release.
+
 ## Commits
 
 - a91c6e6 chore: update release notes generator path in .releaserc.json
