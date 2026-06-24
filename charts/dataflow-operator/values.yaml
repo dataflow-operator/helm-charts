@@ -150,7 +150,7 @@ gui:
   # Image for the GUI server (separate from the operator image)
   image:
     repository: ghcr.io/dataflow-operator/dataflow-web
-    tag: "v0.2.10"
+    tag: "v0.2.12"
     pullPolicy: IfNotPresent
   # Number of GUI server replicas
   replicaCount: 1
