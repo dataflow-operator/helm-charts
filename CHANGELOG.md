@@ -1,3 +1,7 @@
+## Commits
+
+- 6ebe95d Update values.yaml
+
 No user-facing commits in this release.
 
 ## Commits
