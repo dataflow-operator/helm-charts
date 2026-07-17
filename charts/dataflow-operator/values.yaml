@@ -176,8 +176,15 @@ gui:
     # requests:
     #   cpu: 50m
     #   memory: 64Mi
-  # Optional: dedicated service account name for GUI (if not set, uses the same as operator)
+  # ServiceAccount for the GUI.
   serviceAccount:
+    # Create a dedicated, least-privilege ServiceAccount + ClusterRole for the GUI.
+    # Recommended: the GUI is often exposed via Ingress and should NOT reuse the
+    # operator ServiceAccount, which can read Secrets cluster-wide.
+    # When false (and no name is set) the GUI falls back to the operator ServiceAccount.
+    create: true
+    # Optional: use an existing ServiceAccount for the GUI. When set, no GUI
+    # ServiceAccount/ClusterRole/ClusterRoleBinding is created.
     name: ""
   # Ingress for GUI (requires gui.enabled: true)
   ingress:
