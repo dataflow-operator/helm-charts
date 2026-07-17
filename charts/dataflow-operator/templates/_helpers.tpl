@@ -78,3 +78,93 @@ Service account name for GUI (uses operator SA if gui.serviceAccount.name not se
 {{- include "dataflow-operator.serviceAccountName" . }}
 {{- end }}
 {{- end }}
+
+{{/*
+Common labels for GUI resources
+*/}}
+{{- define "dataflow-operator.gui.labels" -}}
+{{ include "dataflow-operator.labels" . }}
+app.kubernetes.io/component: gui
+{{- end }}
+
+{{/*
+Selector labels for GUI resources
+*/}}
+{{- define "dataflow-operator.gui.selectorLabels" -}}
+{{ include "dataflow-operator.selectorLabels" . }}
+app.kubernetes.io/component: gui
+{{- end }}
+
+{{/*
+Image pull secrets block, shared by operator and GUI pod specs.
+*/}}
+{{- define "dataflow-operator.imagePullSecrets" -}}
+{{- with .Values.imagePullSecrets }}
+imagePullSecrets:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+
+{{/*
+Node scheduling constraints (nodeSelector, affinity, tolerations), shared by
+operator and GUI pod specs.
+*/}}
+{{- define "dataflow-operator.nodeScheduling" -}}
+{{- with .Values.nodeSelector }}
+nodeSelector:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.affinity }}
+affinity:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.tolerations }}
+tolerations:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+
+{{/*
+Sentry environment variables, shared by operator and GUI containers.
+*/}}
+{{- define "dataflow-operator.sentryEnv" -}}
+{{- if and .Values.sentry.enabled .Values.sentry.dsn }}
+- name: SENTRY_DSN
+  value: {{ .Values.sentry.dsn | quote }}
+- name: SENTRY_ENVIRONMENT
+  value: {{ .Values.sentry.environment | default "production" | quote }}
+- name: SENTRY_TRACES_SAMPLE_RATE
+  value: {{ (.Values.sentry.tracesSampleRate | default 0.1) | quote }}
+{{- if .Values.sentry.debug }}
+- name: SENTRY_DEBUG
+  value: "true"
+{{- end }}
+{{- if .Values.sentry.release }}
+- name: SENTRY_RELEASE
+  value: {{ .Values.sentry.release | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+HTTP liveness/readiness probes. Pass a dict with "port" (port name) and "path".
+Usage: {{ include "dataflow-operator.httpProbes" (dict "port" "health" "path" "/healthz" "readyPath" "/readyz") }}
+*/}}
+{{- define "dataflow-operator.httpProbes" -}}
+livenessProbe:
+  httpGet:
+    path: {{ .path }}
+    port: {{ .port }}
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+readinessProbe:
+  httpGet:
+    path: {{ .readyPath | default .path }}
+    port: {{ .port }}
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+{{- end }}

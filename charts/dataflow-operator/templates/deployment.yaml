@@ -18,24 +18,14 @@ spec:
       labels:
         {{- include "dataflow-operator.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+      {{- with (include "dataflow-operator.imagePullSecrets" . | trim) }}
+      {{- . | nindent 6 }}
       {{- end }}
       serviceAccountName: {{ include "dataflow-operator.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
+      {{- with (include "dataflow-operator.nodeScheduling" . | trim) }}
+      {{- . | nindent 6 }}
       {{- end }}
       containers:
       - name: {{ .Chart.Name }}
@@ -56,21 +46,8 @@ spec:
           value: {{ .Values.processorLogLevel | default "info" | quote }}
         - name: PROCESSOR_PROGRESS_TIMEOUT_SECONDS
           value: {{ .Values.processorProgressTimeoutSeconds | default "3600" | quote }}
-        {{- if and .Values.sentry.enabled .Values.sentry.dsn }}
-        - name: SENTRY_DSN
-          value: {{ .Values.sentry.dsn | quote }}
-        - name: SENTRY_ENVIRONMENT
-          value: {{ .Values.sentry.environment | default "production" | quote }}
-        - name: SENTRY_TRACES_SAMPLE_RATE
-          value: {{ (.Values.sentry.tracesSampleRate | default 0.1) | quote }}
-        {{- if .Values.sentry.debug }}
-        - name: SENTRY_DEBUG
-          value: "true"
-        {{- end }}
-        {{- if .Values.sentry.release }}
-        - name: SENTRY_RELEASE
-          value: {{ .Values.sentry.release | quote }}
-        {{- end }}
+        {{- with (include "dataflow-operator.sentryEnv" . | trim) }}
+        {{- . | nindent 8 }}
         {{- end }}
         {{- if and .Values.webhook.enabled .Values.webhook.certDir }}
         - name: WEBHOOK_CERT_DIR
@@ -91,22 +68,7 @@ spec:
           containerPort: 9443
           protocol: TCP
         {{- end }}
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: health
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /readyz
-            port: health
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
+        {{- include "dataflow-operator.httpProbes" (dict "port" "health" "path" "/healthz" "readyPath" "/readyz") | nindent 8 }}
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
         {{- if and .Values.webhook.enabled .Values.webhook.certDir .Values.webhook.secretName }}

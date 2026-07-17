@@ -4,8 +4,7 @@ kind: Ingress
 metadata:
   name: {{ include "dataflow-operator.gui.fullname" . }}
   labels:
-    {{- include "dataflow-operator.labels" . | nindent 4 }}
-    app.kubernetes.io/component: gui
+    {{- include "dataflow-operator.gui.labels" . | nindent 4 }}
   {{- with .Values.gui.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
