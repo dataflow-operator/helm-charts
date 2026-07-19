@@ -69,11 +69,16 @@ Full name for GUI deployment and service
 {{- end }}
 
 {{/*
-Service account name for GUI (uses operator SA if gui.serviceAccount.name not set)
+Service account name for GUI.
+Precedence: explicit name > dedicated GUI SA (when create is true) > operator SA.
+Defaulting to a dedicated, least-privilege GUI SA avoids granting the
+internet-facing GUI the operator's cluster-wide secret-reading permissions.
 */}}
 {{- define "dataflow-operator.gui.serviceAccountName" -}}
 {{- if .Values.gui.serviceAccount.name }}
 {{- .Values.gui.serviceAccount.name }}
+{{- else if .Values.gui.serviceAccount.create }}
+{{- include "dataflow-operator.gui.fullname" . }}
 {{- else }}
 {{- include "dataflow-operator.serviceAccountName" . }}
 {{- end }}

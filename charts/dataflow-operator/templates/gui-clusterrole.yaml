@@ -1,0 +1,57 @@
+{{- if and .Values.gui.enabled .Values.rbac.create .Values.gui.serviceAccount.create (not .Values.gui.serviceAccount.name) }}
+# Least-privilege, read-only ClusterRole for the web GUI.
+# The GUI only views Dataflows, events, pods and processor logs. It must NOT
+# inherit the operator's write access or its cluster-wide secret read access.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "dataflow-operator.gui.fullname" . }}-role
+  labels:
+    {{- include "dataflow-operator.labels" . | nindent 4 }}
+    app.kubernetes.io/component: gui
+rules:
+# GUI: список namespaces для выбора в UI
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+# GUI: отображение подов процессоров и их логов
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs:
+  - get
+# GUI: отображение событий DataFlow
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - get
+  - list
+  - watch
+# GUI: отображение Dataflows и DataflowCrons (read-only)
+- apiGroups:
+  - dataflow.dataflow.io
+  resources:
+  - dataflows
+  - dataflows/status
+  - dataflowcrons
+  - dataflowcrons/status
+  verbs:
+  - get
+  - list
+  - watch
+{{- end }}
