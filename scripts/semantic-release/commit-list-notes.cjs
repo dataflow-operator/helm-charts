@@ -1,6 +1,8 @@
 const RELEASE_COMMIT_RE = /^chore\(release\):/i;
 
-function listCommits(fromTag) {
+const NOOP_LOGGER = { log() {}, error() {} };
+
+function listCommits(fromTag, logger = NOOP_LOGGER) {
   const args = ['log', '--pretty=format:%h %s', '--no-merges', '--reverse'];
   if (fromTag) {
     args.push(`${fromTag}..HEAD`);
@@ -11,8 +13,11 @@ function listCommits(fromTag) {
     output = require('child_process')
       .execFileSync('git', args, { encoding: 'utf-8' })
       .trim();
-  } catch {
-    return [];
+  } catch (error) {
+    const stderr = error.stderr ? error.stderr.toString().trim() : '';
+    const details = stderr || error.message;
+    logger.error(`Failed to run "git ${args.join(' ')}": ${details}`);
+    throw new Error(`Unable to generate release notes: ${details}`, { cause: error });
   }
 
   if (!output) {
@@ -29,7 +34,7 @@ function listCommits(fromTag) {
 
 async function generateNotes(_pluginConfig, context) {
   const fromTag = context.lastRelease?.gitTag;
-  const commits = listCommits(fromTag);
+  const commits = listCommits(fromTag, context.logger);
 
   if (commits.length === 0) {
     return 'No user-facing commits in this release.';
