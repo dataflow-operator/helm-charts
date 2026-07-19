@@ -1,5 +1,9 @@
 ## Commits
 
+- 02e2144 refactor(chart): extract duplicated template blocks into shared helpers
+
+## Commits
+
 - 3310c56 fix(release): propagate git failures in release notes generator
 
 ## Commits
