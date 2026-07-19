@@ -1,3 +1,9 @@
+## 1.0.24 (2026-07-19)
+
+## Commits
+
+- efcd9e5 Enhance CRD definitions for DataFlow and DataFlowCron by adding new transformation types: replaceField, headersToPayload, structFlatten, extractField, hoistField, cast, and timezone. Update release notes generator to include repository URL formatting.
+
 ## Commits
 
 - 02e2144 refactor(chart): extract duplicated template blocks into shared helpers
