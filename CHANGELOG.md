@@ -1,5 +1,9 @@
 ## Commits
 
+- 3310c56 fix(release): propagate git failures in release notes generator
+
+## Commits
+
 - 712469a fix(gui): give web GUI a dedicated least-privilege ServiceAccount
 
 ## Commits
