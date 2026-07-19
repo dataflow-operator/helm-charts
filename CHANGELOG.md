@@ -1,5 +1,9 @@
 ## Commits
 
+- 712469a fix(gui): give web GUI a dedicated least-privilege ServiceAccount
+
+## Commits
+
 - 6ebe95d Update values.yaml
 
 No user-facing commits in this release.
