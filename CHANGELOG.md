@@ -1,3 +1,9 @@
+## 1.0.25 (2026-07-20)
+
+## Commits
+
+- e1f70d6 Enhance CRD definitions for DataFlow and DataFlowCron by adding the new transformation type: insertField. This update expands the available transformation options in the YAML configuration.
+
 ## 1.0.24 (2026-07-19)
 
 ## Commits

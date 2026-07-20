@@ -2,7 +2,7 @@ apiVersion: v2
 name: dataflow-operator
 description: A Helm chart for DataFlow Operator - Kubernetes оператор для потоковой передачи данных
 type: application
-version: 1.0.24
+version: 1.0.25
 appVersion: "1.4.0"
 keywords:
   - dataflow
