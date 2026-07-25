@@ -1,3 +1,9 @@
+## 1.0.26 (2026-07-25)
+
+## Commits
+
+- 444b125 Update DataFlow Operator to version 1.9.0 and enhance CRD definitions by adding 'transformWorkers' and 'when' fields for improved transformation configuration options.
+
 ## 1.0.25 (2026-07-20)
 
 ## Commits
