@@ -1,3 +1,9 @@
+## 1.0.27 (2026-07-25)
+
+## Commits
+
+- 0bbb96b Enhance CRD definitions for DataFlow and DataFlowCron by adding the 'collapseBatchOnMessageAck' field. This new field allows for more granular control over batch size during message acknowledgment, improving configuration flexibility.
+
 ## 1.0.26 (2026-07-25)
 
 ## Commits
