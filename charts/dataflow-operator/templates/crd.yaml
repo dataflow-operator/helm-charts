@@ -1242,6 +1242,16 @@ spec:
                       type: string
                   type: object
                 type: array
+              transformWorkers:
+                default: 1
+                description: |-
+                  TransformWorkers is the number of parallel goroutines applying transformations inside one processor pod.
+                  Output order to the sink and source ack order are preserved via a reorder buffer.
+                  Default: 1 (sequential). Raise for CPU-heavy transform chains; keep 1 when transforms are cheap.
+                format: int32
+                maximum: 64
+                minimum: 1
+                type: integer
               transformations:
                 description: Transformations is a list of transformations to apply
                   to messages
@@ -1259,6 +1269,12 @@ spec:
                         mask, router, select, remove, snakeCase, camelCase, debeziumUnwrap,
                         replaceField, headersToPayload, structFlatten, extractField,
                         hoistField, cast, timezone, insertField'
+                      type: string
+                    when:
+                      description: |-
+                        When is an optional predicate. If set and false, this transformation is skipped
+                        (message passes through unchanged). Unlike filter, a false when does not drop the message.
+                        Same condition syntax as filter/router: truthiness, == / !=, metadata.*, ! / && / ||, parentheses.
                       type: string
                   required:
                   - type
