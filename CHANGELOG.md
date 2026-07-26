@@ -1,3 +1,9 @@
+## 1.0.28 (2026-07-26)
+
+## Commits
+
+- efb5372 Update README to include a full reference link for Helm values, enhancing clarity on configuration parameters.
+
 ## 1.0.27 (2026-07-25)
 
 ## Commits
