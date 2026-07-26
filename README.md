@@ -48,7 +48,7 @@ helm uninstall dataflow-operator -n dataflow
 
 ## dataflow-operator configuration
 
-Key parameters (see [values.yaml](charts/dataflow-operator/values.yaml)):
+Full reference: [Helm Values (docs)](https://dataflow-operator.github.io/docs/helm-values/). Key parameters (see [values.yaml](charts/dataflow-operator/values.yaml)):
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
